@@ -1,4 +1,4 @@
-package com.github.dadeo.labelprinter
+package com.github.dadeo.labelprinter.pdf
 
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage

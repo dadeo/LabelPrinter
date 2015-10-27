@@ -1,4 +1,4 @@
-package com.github.dadeo.labelprinter
+package com.github.dadeo.labelprinter.pdf
 
 import groovy.transform.Immutable
 
