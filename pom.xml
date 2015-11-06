@@ -25,7 +25,7 @@
     </repositories>
 
     <properties>
-        <groovy.version>2.4.4</groovy.version>
+        <groovy.version>2.4.5</groovy.version>
         <gmavenplus.version>1.5</gmavenplus.version>
     </properties>
 

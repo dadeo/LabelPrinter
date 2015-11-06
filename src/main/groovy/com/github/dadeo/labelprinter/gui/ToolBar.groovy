@@ -2,12 +2,9 @@ package com.github.dadeo.labelprinter.gui
 
 import javax.swing.*
 import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
 
-class ToolBar extends JToolBar implements ActionListener {
-    private JButton saveButton
-    private JButton refreshButton
-    private JButton printButton
+class ToolBar extends JToolBar {
     private ToolBarListener toolBarListener
 
     ToolBar() {
@@ -16,38 +13,52 @@ class ToolBar extends JToolBar implements ActionListener {
 
 //        setFloatable(false)
 
-        def createButton = { String name, String path ->
+        def createActionButton = { String name, String path, Action action, KeyStroke keyStroke ->
             ImageIcon icon = Utils.createIcon(path)
 
-            JButton button = icon ? new JButton() : new JButton(name)
+            JButton button = new JButton(action)
             button.setToolTipText(name)
             button.setIcon(icon)
-            button.addActionListener(this)
-            button
+
+            button.getActionMap().put("perform$name", action);
+            button.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(keyStroke, "perform$name");
+
+            add button
         }
 
-        saveButton = createButton('Save', '/com/github/dadeo/labelprinter/images/Save16.gif')
-        add saveButton
+        Action performSave = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                toolBarListener?.saveEventOccurred()
+            }
+        }
 
-        refreshButton = createButton('Refresh', '/com/github/dadeo/labelprinter/images/Refresh16.gif')
-        add refreshButton
+        Action performRefresh = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                toolBarListener?.refreshEventOccurred()
+            }
+        }
 
-        printButton = createButton('Print', '/com/github/dadeo/labelprinter/images/Print16.gif')
-        add printButton
-    }
+        Action performPrint = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                toolBarListener?.printEventOccurred()
+            }
+        }
 
-    @Override
-    void actionPerformed(ActionEvent e) {
-        JButton clicked = (JButton) e.source
+        createActionButton('Save',
+                           '/com/github/dadeo/labelprinter/images/Save16.gif',
+                           performSave,
+                           KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.META_MASK))
 
-        if (!toolBarListener) return
+        createActionButton('Refresh',
+                           '/com/github/dadeo/labelprinter/images/Refresh16.gif',
+                           performRefresh,
+                           KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.META_MASK))
 
-        if (clicked == saveButton)
-            toolBarListener.saveEventOccurred()
-        else if (clicked == refreshButton)
-            toolBarListener.refreshEventOccurred()
-        else
-            toolBarListener.printEventOccurred()
+        createActionButton('Print',
+                           '/com/github/dadeo/labelprinter/images/Print16.gif',
+                           performPrint,
+                           KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.META_MASK))
+
     }
 
     void setToolBarListener(ToolBarListener listener) {

@@ -1,0 +1,6 @@
+- Unable to delete from database
+- Save whole database every time
+- add autosave
+- display what the label will look like
+- allow multiple rows to be selected to print
+
