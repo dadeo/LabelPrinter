@@ -78,9 +78,13 @@ class TablePanel extends JPanel {
         refresh()
     }
 
-    void refresh() {
+    void stopEditing() {
         if (table.isEditing())
             table.removeEditor()
+    }
+
+    void refresh() {
+        stopEditing()
         tableModel.fireTableDataChanged()
     }
 

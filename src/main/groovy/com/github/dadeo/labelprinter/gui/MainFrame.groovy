@@ -11,6 +11,8 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.util.prefs.Preferences
 
+import static javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW
+
 class MainFrame extends JFrame {
 
     private ToolBar toolBar
@@ -86,6 +88,16 @@ class MainFrame extends JFrame {
             formPanel.reset()
             formPanel.requestFocus()
         }
+
+        Action performSetFocus = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                tablePanel.stopEditing()
+                formPanel.requestFocus()
+            }
+        }
+
+        ((JPanel) this.contentPane).getActionMap().put("performSetFocus", performSetFocus);
+        ((JPanel) this.contentPane).getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.META_MASK), "performSetFocus");
 
         String user = preferences.get("user", "sa")
         String password = preferences.get("password", "")

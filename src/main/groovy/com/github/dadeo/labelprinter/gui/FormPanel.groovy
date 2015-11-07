@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 
 class FormPanel extends JPanel {
+    private Action performSetFocus
+    private Action performAdd
     private JLabel line1Label
     private JTextField line1Field
     private JLabel line2Label
@@ -33,9 +35,29 @@ class FormPanel extends JPanel {
     private ButtonGroup genderGroup
 
     FormPanel() {
+        createActions()
         createComponents()
         layoutComponents()
         reset()
+    }
+
+    protected void createActions() {
+        performAdd = new AbstractAction("Add") {
+            public void actionPerformed(ActionEvent e) {
+                if (formListener)
+                    formListener.formEventOccurred(new FormEvent(this,
+                                                                 line1Field.text,
+                                                                 line2Field.text,
+                                                                 line3Field.text,
+                                                                 line4Field.text))
+            }
+        }
+
+        performSetFocus = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                requestFocus()
+            }
+        }
     }
 
     protected void createComponents() {
@@ -63,17 +85,10 @@ class FormPanel extends JPanel {
         mnemonic line3Label, line3Field, KeyEvent.VK_3
         mnemonic line4Label, line4Field, KeyEvent.VK_4
 
-        addBtn = new JButton("Add")
+        addBtn = new JButton(performAdd)
 
-        addBtn.addActionListener { ActionEvent e ->
-            if (formListener)
-                formListener.formEventOccurred(new FormEvent(this,
-                                                             line1Field.text,
-                                                             line2Field.text,
-                                                             line3Field.text,
-                                                             line4Field.text))
-
-        }
+        addBtn.getActionMap().put("performAdd", performAdd);
+        addBtn.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "performAdd");
 
         Border innerBorder = BorderFactory.createTitledBorder("Add Person")
         Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5)
