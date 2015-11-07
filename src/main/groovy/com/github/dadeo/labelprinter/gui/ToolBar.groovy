@@ -26,12 +26,6 @@ class ToolBar extends JToolBar {
             add button
         }
 
-        Action performSave = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                toolBarListener?.saveEventOccurred()
-            }
-        }
-
         Action performRefresh = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 toolBarListener?.refreshEventOccurred()
@@ -43,11 +37,6 @@ class ToolBar extends JToolBar {
                 toolBarListener?.printEventOccurred()
             }
         }
-
-        createActionButton('Save',
-                           '/com/github/dadeo/labelprinter/images/Save16.gif',
-                           performSave,
-                           KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.META_MASK))
 
         createActionButton('Refresh',
                            '/com/github/dadeo/labelprinter/images/Refresh16.gif',

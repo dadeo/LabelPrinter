@@ -34,15 +34,7 @@ class Controller {
     }
 
     void refresh() {
-        database.connect()
         database.load()
-        database.disconnect()
-    }
-
-    void save() {
-        database.connect()
-        database.save()
-        database.disconnect()
     }
 
     void configure(int port, String user, String password) {
@@ -63,13 +55,13 @@ class Controller {
 //                .exclude(1, 1, 5)
 
         LabelPageDescriptor avery5160 = [
-                page : [height: 11, marginX: 0.5, marginY: 0.75] as PageProperties,
-                label: [width: 2.75, height: 1.0, columns: 3, rows: 10] as LabelProperties
+            page : [height: 11, marginX: 0.5, marginY: 0.75] as PageProperties,
+            label: [width: 2.75, height: 1.0, columns: 3, rows: 10] as LabelProperties
         ]
 
         LabelPageDescriptor avery5163 = [
-                page : [height: 11, marginX: 0.5, marginY: 0.75] as PageProperties,
-                label: [width: 4.0, height: 2.0, columns: 2, rows: 5] as LabelProperties
+            page : [height: 11, marginX: 0.5, marginY: 0.75] as PageProperties,
+            label: [width: 4.0, height: 2.0, columns: 2, rows: 5] as LabelProperties
         ]
 
         LabelDocument labelDocument = new LabelPdfCreator().createLabels(labels, avery5160, labelExclusionMatrix)

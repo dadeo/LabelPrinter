@@ -62,16 +62,6 @@ class MainFrame extends JFrame {
         }
 
         toolBar.toolBarListener = new ToolBarListener() {
-            @Override
-            void saveEventOccurred() {
-                try {
-                    tablePanel.save()
-                    controller.save()
-                } catch (e) {
-                    e.printStackTrace()
-                    JOptionPane.showMessageDialog(MainFrame.this, "Cannot save to the database.", "Database Save Problem", JOptionPane.ERROR_MESSAGE)
-                }
-            }
 
             @Override
             void refreshEventOccurred() {

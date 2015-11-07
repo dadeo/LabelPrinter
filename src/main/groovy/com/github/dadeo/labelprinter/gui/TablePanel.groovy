@@ -84,9 +84,4 @@ class TablePanel extends JPanel {
         tableModel.fireTableDataChanged()
     }
 
-    void save() {
-        if (table.isEditing())
-            table.cellEditor.stopCellEditing()
-    }
-
 }

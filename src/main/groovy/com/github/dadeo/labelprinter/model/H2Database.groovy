@@ -23,11 +23,17 @@ class H2Database {
 
     H2Database addLabel(Label person) {
         labels << person
+        withConnection {
+            insertLabel(person)
+        }
         this
     }
 
     H2Database removeLabel(int index) {
-        labels.remove(index)
+        Label label = labels.remove(index)
+        withConnection {
+            deleteLabel(label)
+        }
         this
     }
 
@@ -36,6 +42,7 @@ class H2Database {
             Label label = labels[index]
             updateLabel(label)
         }
+        this
     }
 
     List<Label> getLabels() {
@@ -83,21 +90,36 @@ class H2Database {
         this
     }
 
+    H2Database deleteLabel(Label label) {
+        sql.executeUpdate(
+            '''
+                    delete from Labels
+                    where id = ?
+                ''',
+            [
+                label.id
+            ])
+
+        this
+    }
+
     List<Label> load() {
         labels.clear()
 
-        sql.eachRow(
-            'select * from Labels',
-            { rs ->
-                this.@labels << new Label(id: rs.id,
-                                          line1: rs.line1,
-                                          line2: rs.line2,
-                                          line3: rs.line3,
-                                          line4: rs.line4,
-                                          printed: rs.printed)
-            })
+        withConnection {
+            sql.eachRow(
+                'select * from Labels',
+                { rs ->
+                    this.@labels << new Label(id: rs.id,
+                                              line1: rs.line1,
+                                              line2: rs.line2,
+                                              line3: rs.line3,
+                                              line4: rs.line4,
+                                              printed: rs.printed)
+                })
 
-        getLabels()
+            getLabels()
+        }
     }
 
     void saveToFile(File file) {
