@@ -1,5 +1,7 @@
 package com.github.dadeo.labelprinter.gui
 
+import com.apple.eawt.Application
+import com.apple.eawt.QuitHandler
 import com.github.dadeo.labelprinter.controller.Controller
 
 import javax.swing.*
@@ -25,6 +27,8 @@ class MainFrame extends JFrame {
 
     MainFrame(String version) {
         super("Label Maker Pro - $version")
+
+        JFrame thisFrame = this
 
         layout = new BorderLayout()
 
@@ -130,6 +134,19 @@ class MainFrame extends JFrame {
             }
         })
 
+        Application.application.setQuitHandler(new QuitHandler() {
+            @Override
+            public void handleQuitRequestWith(com.apple.eawt.AppEvent.QuitEvent qe, com.apple.eawt.QuitResponse qr) {
+                int action = JOptionPane.showConfirmDialog(MainFrame.this, "Do you really want to exit?", "Confirm Exit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)
+                if (action == JOptionPane.OK_OPTION) {
+                    thisFrame.windowListeners.each { it.windowClosing(new WindowEvent(thisFrame, 0)) }
+                    qr.performQuit();
+                } else {
+                    qr.cancelQuit();
+                }
+            }
+        });
+
         refreshPersonData()
 
         visible = true
@@ -151,51 +168,6 @@ class MainFrame extends JFrame {
     }
 
     private JMenuBar createMenuBar() {
-
-        JMenuItem exportDataItem = new JMenuItem("Export Data...")
-        exportDataItem.addActionListener { ActionEvent e ->
-            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                try {
-                    controller.saveData(fileChooser.selectedFile)
-                } catch (error) {
-                    JOptionPane.showMessageDialog(this, "Could not save data to file.", "Error", JOptionPane.ERROR_MESSAGE)
-                    error.printStackTrace()
-                }
-
-            }
-        }
-        JMenuItem importDataItem = new JMenuItem("Import Data...")
-        importDataItem.addActionListener { ActionEvent e ->
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                try {
-                    controller.loadData(fileChooser.selectedFile)
-                    tablePanel.refresh()
-                } catch (error) {
-                    JOptionPane.showMessageDialog(this, "Could not load data from file.", "Error", JOptionPane.ERROR_MESSAGE)
-                    error.printStackTrace()
-                }
-            }
-        }
-        JMenuItem exitItem = new JMenuItem("Exit")
-        exitItem.addActionListener { ActionEvent e ->
-            int action = JOptionPane.showConfirmDialog(this, "Do you really want to exit?", "Confirm Exit", JOptionPane.OK_CANCEL_OPTION)
-            if (action == JOptionPane.OK_OPTION) {
-                windowListeners.each { it.windowClosing(new WindowEvent(this, 0)) }
-            }
-        }
-
-        JMenu fileMenu = new JMenu("File")
-        fileMenu.add(exportDataItem)
-        fileMenu.add(importDataItem)
-        fileMenu.addSeparator()
-        fileMenu.add(exitItem)
-
-        importDataItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.META_MASK)
-        exportDataItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.META_MASK)
-        exitItem.mnemonic = KeyEvent.VK_X
-        exitItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK)
-        fileMenu.mnemonic = KeyEvent.VK_F
-
         JMenu showMenu = new JMenu("Show")
         JMenuItem showFormItem = new JCheckBoxMenuItem("Person Form")
         showFormItem.selected = true
@@ -212,7 +184,6 @@ class MainFrame extends JFrame {
         windowMenu.add(showMenu)
 
         JMenuBar menuBar = new JMenuBar()
-        menuBar.add(fileMenu)
         menuBar.add(windowMenu)
 
         menuBar
