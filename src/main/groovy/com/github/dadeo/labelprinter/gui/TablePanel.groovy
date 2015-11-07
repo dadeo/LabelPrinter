@@ -18,17 +18,23 @@ class TablePanel extends JPanel {
 
         Action performDelete = new AbstractAction('Delete row') {
             public void actionPerformed(ActionEvent e) {
+                int startIndex = table.selectionModel.getMinSelectionIndex()
+                int lastIndex = table.selectionModel.getMaxSelectionIndex()
+
+                if (startIndex == -1) return
+
                 table.removeEditor()
-                if (personTableListener) {
-                    int startIndex = table.selectionModel.getMinSelectionIndex()
-                    int lastIndex = table.selectionModel.getMaxSelectionIndex()
-                    (startIndex..lastIndex).findAll {
-                        table.selectionModel.isSelectedIndex(it)
-                    }.reverse().each { int index ->
-                        personTableListener.rowDeleted(index)
-                        tableModel.fireTableRowsDeleted(index, index)
-                    }
+                (startIndex..lastIndex).findAll {
+                    table.selectionModel.isSelectedIndex(it)
+                }.reverse().each { int index ->
+                    personTableListener?.rowDeleted(index)
+                    tableModel.fireTableRowsDeleted(index, index)
                 }
+
+                if (table.rowCount > startIndex)
+                    table.selectionModel.setSelectionInterval(startIndex, startIndex)
+                else if (table.rowCount > 0)
+                    table.selectionModel.setSelectionInterval(startIndex - 1, startIndex - 1)
             }
         }
 
