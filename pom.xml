@@ -6,11 +6,11 @@
     <groupId>com.github.dadeo</groupId>
     <artifactId>label-printer</artifactId>
     <name>Label Printer</name>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
 
     <scm>
         <developerConnection>scm:git:git@github.com:dadeo/LabelPrinter.git</developerConnection>
-      <tag>label-printer-0.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <repositories>
