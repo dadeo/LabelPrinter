@@ -10,7 +10,7 @@
     <version>0.1-SNAPSHOT</version>
 
     <scm>
-        <developerConnection>scm:git:git://github.com/dadeo/LabelPrinter.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:dadeo/LabelPrinter.git</developerConnection>
     </scm>
 
     <repositories>
