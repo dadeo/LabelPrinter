@@ -3,7 +3,7 @@ package com.github.dadeo.labelprinter.gui
 import javax.swing.*
 import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.List
@@ -15,20 +15,36 @@ class TablePanel extends JPanel {
     LabelTableListener personTableListener
 
     TablePanel() {
-        JMenuItem removeItem = new JMenuItem("Delete row")
-        removeItem.addActionListener { ActionEvent e ->
-            int index = table.selectionModel.getMinSelectionIndex()
-            if (personTableListener) {
-                personTableListener.rowDeleted(index)
-                tableModel.fireTableRowsDeleted(index, index)
+
+        Action performDelete = new AbstractAction('Delete row') {
+            public void actionPerformed(ActionEvent e) {
+                table.removeEditor()
+                if (personTableListener) {
+                    int startIndex = table.selectionModel.getMinSelectionIndex()
+                    int lastIndex = table.selectionModel.getMaxSelectionIndex()
+                    (startIndex..lastIndex).findAll {
+                        table.selectionModel.isSelectedIndex(it)
+                    }.reverse().each { int index ->
+                        personTableListener.rowDeleted(index)
+                        tableModel.fireTableRowsDeleted(index, index)
+                    }
+                }
             }
-        } as ActionListener
+        }
 
         popup = new JPopupMenu()
-        popup.add(removeItem)
+        popup.add(performDelete)
 
         tableModel = new LabelTableModel()
+        tableModel.labelTableModelListener = new LabelTableModelListener() {
+            @Override
+            void labelUpdated(int row) {
+                personTableListener?.labelUpdated(row)
+            }
+        }
+
         table = new JTable(tableModel)
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
         table.tableHeader.defaultRenderer = new LabelTableCellHeaderRenderer()
         table.rowHeight = 25
         table.getColumnModel().getColumn(0).setMaxWidth(50)
@@ -43,15 +59,18 @@ class TablePanel extends JPanel {
         table.addMouseListener(new MouseAdapter() {
             @Override
             void mousePressed(MouseEvent e) {
-                int row = table.rowAtPoint(e.point)
-                table.selectionModel.setSelectionInterval(row, row)
                 if (e.button == MouseEvent.BUTTON3) {
                     popup.show(table, e.x, e.y)
                 }
             }
         })
+
         layout = new BorderLayout()
         add(new JScrollPane(table), BorderLayout.CENTER)
+
+
+        table.getActionMap().put("performDelete", performDelete);
+        table.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.META_MASK), "performDelete");
     }
 
     void setData(List<Label> data) {
@@ -60,7 +79,14 @@ class TablePanel extends JPanel {
     }
 
     void refresh() {
+        if (table.isEditing())
+            table.removeEditor()
         tableModel.fireTableDataChanged()
+    }
+
+    void save() {
+        if (table.isEditing())
+            table.cellEditor.stopCellEditing()
     }
 
 }

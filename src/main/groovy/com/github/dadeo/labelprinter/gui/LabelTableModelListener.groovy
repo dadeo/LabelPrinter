@@ -1,9 +1,7 @@
 package com.github.dadeo.labelprinter.gui
 
-interface LabelTableListener {
+interface LabelTableModelListener {
 
     void labelUpdated(int row)
-
-    void rowDeleted(int row)
 
 }

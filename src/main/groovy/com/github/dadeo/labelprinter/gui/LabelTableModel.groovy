@@ -6,6 +6,8 @@ import javax.swing.*
 import javax.swing.table.AbstractTableModel
 
 class LabelTableModel extends AbstractTableModel {
+    LabelTableModelListener labelTableModelListener
+
     private List<Map<String, ?>> columnDefinitions = [
             [fieldName: 'id', headingName: 'ID', type: Integer, alignment: JLabel.CENTER],
             [fieldName: 'line1', headingName: 'Line 1', type: String, alignment: JLabel.LEFT],
@@ -47,9 +49,9 @@ class LabelTableModel extends AbstractTableModel {
             case 5:
                 label.printed = value
                 break
-            default:
-                return
         }
+
+        labelTableModelListener?.labelUpdated(rowIndex)
     }
 
     @Override

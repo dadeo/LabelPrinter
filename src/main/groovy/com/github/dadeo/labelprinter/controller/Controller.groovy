@@ -17,6 +17,10 @@ class Controller {
         database.removeLabel(index)
     }
 
+    void updateLabel(int index) {
+        database.updateLabel(index)
+    }
+
     List<Label> findAllLabels() {
         database.labels
     }

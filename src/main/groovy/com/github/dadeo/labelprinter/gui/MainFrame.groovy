@@ -38,6 +38,11 @@ class MainFrame extends JFrame {
 
         tablePanel.setData(controller.findAllLabels())
         tablePanel.setPersonTableListener(new LabelTableListener() {
+            @Override
+            void labelUpdated(int row) {
+                controller.updateLabel(row)
+            }
+
             void rowDeleted(int row) {
                 controller.removeLabel(row)
             }
@@ -60,6 +65,7 @@ class MainFrame extends JFrame {
             @Override
             void saveEventOccurred() {
                 try {
+                    tablePanel.save()
                     controller.save()
                 } catch (e) {
                     e.printStackTrace()
