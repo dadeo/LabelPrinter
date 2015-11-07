@@ -2,10 +2,7 @@ package com.github.dadeo.labelprinter.gui
 
 import javax.swing.*
 import java.awt.*
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
+import java.awt.event.*
 import java.util.List
 
 class TablePanel extends JPanel {
@@ -62,12 +59,36 @@ class TablePanel extends JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(100)
         table.getColumnModel().getColumn(3).setPreferredWidth(100)
         table.getColumnModel().getColumn(4).setPreferredWidth(100)
+
+        table.setDefaultRenderer(Number, new HighlightingNumberCellRenderer())
+        table.setDefaultRenderer(Boolean, new HighlightingBooleanCellRenderer())
+        table.setDefaultEditor(Boolean, new HightlightingBooleanCellEditor())
+
         table.addMouseListener(new MouseAdapter() {
             @Override
             void mousePressed(MouseEvent e) {
                 if (e.button == MouseEvent.BUTTON3) {
                     popup.show(table, e.x, e.y)
+                } else {
+                    int row = table.getSelectedRow()
+                    int column = table.getSelectedColumn()
+
+                    if (row == -1 || column == -1) return
+
+                    table.editCellAt(row, column)
                 }
+            }
+        })
+
+        table.addKeyListener(new KeyAdapter() {
+            @Override
+            void keyReleased(KeyEvent e) {
+                int row = table.getSelectedRow()
+                int column = table.getSelectedColumn()
+
+                if (row == -1 || column == -1) return
+
+                table.editCellAt(row, column)
             }
         })
 

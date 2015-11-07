@@ -95,7 +95,6 @@ final class LabelPdfCreator {
         List<LabelContent> printedLabels = []
 
         def stampAddress = { FPoint pos, LabelContent content ->
-            println content
             contents.beginText()
             contents.setFont(font, 12)
             contents.newLineAtOffset(pos.x, pos.y)
