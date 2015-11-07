@@ -23,8 +23,8 @@ class MainFrame extends JFrame {
     private Preferences preferences
     private JSplitPane splitPane
 
-    MainFrame() {
-        super("Label Maker Pro")
+    MainFrame(String version) {
+        super("Label Maker Pro - $version")
 
         layout = new BorderLayout()
 
