@@ -15,5 +15,6 @@ class HightlightingBooleanCellEditor extends DefaultCellEditor {
                                                  int row, int column) {
         JCheckBox checkBox = super.getTableCellEditorComponent(table, value, isSelected, row, column)
         checkBox.setBorder(BorderFactory.createLineBorder(Color.black, 1))
+        checkBox
     }
 }
