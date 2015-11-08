@@ -101,7 +101,20 @@ class MainFrame extends JFrame {
         }
 
         ((JPanel) this.contentPane).getActionMap().put("performSetFocus", performSetFocus);
-        ((JPanel) this.contentPane).getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.META_MASK), "performSetFocus");
+        ((JPanel) this.contentPane).getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.META_DOWN_MASK), "performSetFocus");
+
+        Action changeFocusAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                tablePanel.stopEditing()
+                if (formPanel.hasFocus())
+                    tablePanel.requestFocus()
+                else
+                    formPanel.requestFocus()
+            }
+        }
+
+        ((JPanel) this.contentPane).getActionMap().put("changeFocusAction", changeFocusAction);
+        ((JPanel) this.contentPane).getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.META_DOWN_MASK), "changeFocusAction");
 
         String user = preferences.get("user", "sa")
         String password = preferences.get("password", "")

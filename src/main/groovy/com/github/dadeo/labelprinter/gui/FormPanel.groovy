@@ -17,22 +17,8 @@ class FormPanel extends JPanel {
     private JTextField line3Field
     private JLabel line4Label
     private JTextField line4Field
-    private JLabel occupationLabel
-    private JLabel ageCategoryLabel
-    private JLabel employmentLabel
-    private JTextField occupationField
     private JButton addBtn
     private FormListener formListener
-    private JList ageList
-    private JComboBox employmentCombo
-    private JLabel citizenLabel
-    private JCheckBox citizenCheck
-    private JTextField taxField
-    private JLabel taxLabel
-    private JLabel genderLabel
-    private JRadioButton maleRadio
-    private JRadioButton femaleRadio
-    private ButtonGroup genderGroup
 
     FormPanel() {
         createActions()
@@ -195,5 +181,10 @@ class FormPanel extends JPanel {
 
     void requestFocus() {
         line1Field.requestFocus()
+    }
+
+    boolean hasFocus() {
+        Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
+        [line1Field, line2Field, line3Field, line4Field, addBtn].contains(c)
     }
 }

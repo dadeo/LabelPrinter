@@ -96,8 +96,8 @@ class TablePanel extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER)
 
 
-        table.getActionMap().put("performDelete", performDelete);
-        table.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.META_MASK), "performDelete");
+        table.getActionMap().put("performDelete", performDelete)
+        table.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.META_MASK), "performDelete")
     }
 
     void setData(List<Label> data) {
@@ -115,4 +115,29 @@ class TablePanel extends JPanel {
         tableModel.fireTableDataChanged()
     }
 
+    @Override
+    void requestFocus() {
+        table.requestFocus()
+
+        def forceToColumn = { it == -1 ? 0 : it }
+
+        def forceToEditableColumn = {
+            int col = forceToColumn(it)
+            (col..<table.columnCount).find { table.isCellEditable(0, it) } ?: 0
+        }
+
+        if (table.rowCount > 0) {
+            int row = forceToColumn(table.selectedRow)
+            int column = forceToEditableColumn(table.selectedColumn)
+
+            table.removeEditor()
+
+            SwingUtilities.invokeLater {
+                table.setRowSelectionInterval(row, row)
+                table.editCellAt(row, column)
+            }
+        }
+
+
+    }
 }
