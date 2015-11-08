@@ -121,21 +121,18 @@ class TablePanel extends JPanel {
 
         def forceToColumn = { it == -1 ? 0 : it }
 
-        def forceToEditableColumn = {
-            int col = forceToColumn(it)
-            (col..<table.columnCount).find { table.isCellEditable(0, it) } ?: 0
+        def forceToEditableColumn = { int row ->
+            (0..<table.columnCount).find { table.isCellEditable(row, it) } ?: 0
         }
 
         if (table.rowCount > 0) {
             int row = forceToColumn(table.selectedRow)
-            int column = forceToEditableColumn(table.selectedColumn)
+            int column = table.selectedColumn == -1 ? forceToEditableColumn(row) : table.selectedColumn
 
             table.removeEditor()
 
-            SwingUtilities.invokeLater {
-                table.setRowSelectionInterval(row, row)
-                table.editCellAt(row, column)
-            }
+            table.setRowSelectionInterval(row, row)
+            table.editCellAt(row, column)
         }
 
 
