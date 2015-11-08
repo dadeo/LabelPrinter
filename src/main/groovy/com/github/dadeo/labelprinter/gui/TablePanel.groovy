@@ -134,7 +134,12 @@ class TablePanel extends JPanel {
             table.setRowSelectionInterval(row, row)
             table.editCellAt(row, column)
         }
+    }
 
-
+    List<Integer> getSelectedLabelIndices() {
+        if (table.selectedRowCount <= 1)
+            []
+        else
+            table.selectedRows as List
     }
 }

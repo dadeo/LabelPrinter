@@ -81,7 +81,8 @@ class MainFrame extends JFrame {
 
             @Override
             void printEventOccurred() {
-                controller.print()
+                java.util.List<Integer> indices = tablePanel.getSelectedLabelIndices()
+                controller.printLabels(indices)
             }
 
         }

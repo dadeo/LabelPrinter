@@ -41,8 +41,12 @@ class Controller {
         database.configure(port, user, password)
     }
 
-    void print() {
-        List<LabelContent> labels = findAllLabels().collect {
+    void printLabels(List<Integer> indices) {
+        List<Label> allLabels = findAllLabels()
+        List<Label> labels = indices ? indices.collect { allLabels[it] } : allLabels
+
+
+        List<LabelContent> labelContents = labels.collect {
             new LabelContent(line1: it.line1, line2: it.line2, line3: it.line3, line4: it.line4)
         }
 
@@ -64,7 +68,7 @@ class Controller {
             label: [width: 4.0, height: 2.0, columns: 2, rows: 5] as LabelProperties
         ]
 
-        LabelDocument labelDocument = new LabelPdfCreator().createLabels(labels, avery5160, labelExclusionMatrix)
+        LabelDocument labelDocument = new LabelPdfCreator().createLabels(labelContents, avery5160, labelExclusionMatrix)
 
         try {
             labelDocument.printWithDialog()
